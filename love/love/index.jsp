@@ -48,11 +48,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <body data-spy="scroll" data-offset="120">
 
 	<%
+	//TimeZone timeZoneNY = TimeZone.getTimeZone("America/New_York");
+	TimeZone timeZoneNY = TimeZone.getTimeZone("Asia/Shanghai");
 	
 	   //new日期对象
 	   Date dates = new Date();
 	   //转换提日期输出格式
-	   SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	   SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.CHINESE);
+	   dateFormat.setTimeZone(timeZoneNY) ;
 	   String creationDate = dateFormat.format(dates);
 	   dateFormat.applyPattern("yyyy-MM-dd");
        String date = dateFormat.format(dates);
