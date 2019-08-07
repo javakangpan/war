@@ -1,4 +1,4 @@
-/* 最新最全最好的Bootstrap模板：http://www.bootstrapmb.com
+/* 锟斤拷锟斤拷锟斤拷全锟斤拷玫锟紹ootstrap模锟藉：http://www.bootstrapmb.com
    File Description: Main Css file of the template
 */
 /****************************************\
@@ -54,6 +54,7 @@ p {
 .section {
   padding: 40px 30px 40px 30px;
   position: relative;
+  z-index: 1;
 }
 
 .clear {

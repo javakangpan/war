@@ -39,6 +39,7 @@ jQuery(document).ready(function($) {
 			return false;
 		});
 		
+		
 		$("#style-switcher .bottom a.settings").click(function(e){
 			e.preventDefault();
 			var div = $("#style-switcher");

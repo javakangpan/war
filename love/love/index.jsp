@@ -18,6 +18,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Premium Bootstrap 4 Landing Page Template" />
     <meta name="keywords" content="bootstrap 4, premium, marketing, multipurpose" />
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta content="Themesdesign" name="author" />
     <!-- favicon -->
     <!-- css -->
@@ -33,35 +35,27 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
     <link href="css/style.css" rel="stylesheet" type="text/css" />
     <link href="css/colors/default.css" rel="stylesheet" id="color-opt">
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="css/bootstrapDatepickr-1.0.0.css">
+
+	<script src="js/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="dist/bootstrapDatepickr-1.0.0.min.js"></script>
 
 </head>
 
 <body data-spy="scroll" data-offset="120">
 
 	<%
-		// 获取当前时间
-	   Calendar calendar = new GregorianCalendar();
-	   String am_pm;
-	   int hour = calendar.get(Calendar.HOUR) + 12;
-	   int minute = calendar.get(Calendar.MINUTE);
-	   int second = calendar.get(Calendar.SECOND);
-	   String seconds = "";
-	   if(second < 10){
-		   seconds = "0" + second;
-	   }else{
-		   seconds = "" + second;
-	   }
-	   if(calendar.get(Calendar.AM_PM) == 0)
-	      am_pm = "AM";
-	   else
-	      am_pm = "PM";
-	   String time = hour+":"+ minute +":"+ seconds +" "+ am_pm;
-	   
-	   SimpleDateFormat sdf = new SimpleDateFormat();// 格式化时间 
-       sdf.applyPattern("yyyy-MM-dd HH:mm:ss a");// a为am/pm的标记  
-       Date date = new Date();// 获取当前时间 
-       String creationDate = sdf.format(date);
-	   
+	
+	   //new日期对象
+	   Date dates = new Date();
+	   //转换提日期输出格式
+	   SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	   String creationDate = dateFormat.format(dates);
+	   dateFormat.applyPattern("yyyy-MM-dd");
+       String date = dateFormat.format(dates);
 	   ContactInfoDaoImpl impl = new ContactInfoDaoImpl();
 		// 解决中文乱码的问题
 		if(null != request.getParameter("name") && null != request.getParameter("comments")){
@@ -72,15 +66,18 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			if(null != name && !"".equals(name) && null != comments && !"".equals(comments)){
 				contactInfo.setName(name);
 				contactInfo.setComments(comments);
-				contactInfo.setTime(time);
+				contactInfo.setCreateBy(name);
 				contactInfo.setCreationDate(creationDate);
 			}
 			request.removeAttribute("");
 			impl.inser(contactInfo);
 		}
-
-		List<ContactInfo> list = impl.queryAllInfo();
+		if(null != request.getParameter("date")){
+			date = request.getParameter("date");
+		}
 		
+		
+		List<ContactInfo> list = impl.queryInfoByDate(date);
 		
 	%>
 
@@ -142,15 +139,30 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                                     <div class="col-lg-12">
                                         <div class="title-heading">
                                             <p class="sub-title text-muted mb-0"></p>
-                                            <h3 class="title m-0 text-uppercase">我们的故事</h3>
+                                           	<h3 class="title m-0 text-uppercase">我们的故事</h3>
+                                           <div class="container">	
+	<div class="row" style="display: block;left:400px;top:-30px;position: relative;">
+		<div class="col-md-4">
+		<form method="post" action="index.jsp">
+			<div class="input-group">
+				<span class="input-group-addon" id="basic-addon1"><i class="fa fa-calendar"></i></span>
+				<input type="text" id="calendar" name="date" placeholder="" class="form-control">
+			</div>
+			<input type="submit" style ="position: relative;float: right;top:-34px;z-index:2;height:34px;padding-top:2px;bottom:-2px;"value="查询">
+		</form>
+		</div>
+	</div>
+</div>
+    											
                                             <hr />
-                                            <div>
-                                            <% for(ContactInfo data : list)  { %>
-                                            	 <p><%=data.getTime()  + " " + data.getName() %>：</p>
-                                            	 <p>
-                                            	 <%=data.getComments()%></p>
+                                            <%for(ContactInfo data : list)  { %>
+                                            	 <p><%=data.getCreationDate()  + " " + data.getName() %>：</p>
+                                            	 <p><%=data.getComments()%></p>
                                             <% } %>
-                                           </div>
+                                      		
+
+
+
                                         </div>
                                     </div>
                                 </div>
@@ -388,7 +400,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     </div>
     <!-- end Style switcher -->
     <!-- javascript -->
-    <script src="js/jquery.min.js"></script>
+    
+    
+    <script>
+	$(document).ready(function() {
+		$("#calendar").bootstrapDatepickr({date_format: "Y-m-d"});
+	});
+</script>
     <script src="js/bootstrap.bundle.min.js"></script>
     <script src="js/jquery.easing.min.js"></script>
     <script src="js/scrollspy.min.js"></script>
@@ -406,6 +424,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <script src="js/switcher.js"></script>
     <!-- Main Js -->
     <script src="js/app.js"></script>
+
+     
 
 </body>
 
